@@ -1,7 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { createErc721, CREATE_ERC721_SUCCESS } from '../../../actions/erc721/create'
+import { Link } from 'react-router-dom';
+import { createProduct, CREATE_PRODUCT_SUCCESS } from '../../../actions/product/create'
 import '../css/index.css'
 
 class CreateERC721Form extends React.Component {
@@ -10,7 +11,7 @@ class CreateERC721Form extends React.Component {
     this.state = {
       name: "",
       description: "",
-      externalURL: ""
+      image: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -26,39 +27,44 @@ class CreateERC721Form extends React.Component {
     let user = this.props.session.data
     let payload = {
       userId: user.id,
-      externalUrl: this.state.externalURL,
       name: this.state.name,
       description: this.state.description,
       userWallet: user.address,
-      tokenType: "erc721"
+      image: this.state.image,
+      tokenType: 0
     }
-    let action = await this.props.createErc721(payload)
-    if (action.type === CREATE_ERC721_SUCCESS) {
+    let action = await this.props.createProduct(payload)
+    if (action.type === CREATE_PRODUCT_SUCCESS) {
       this.props.history.push("/")
     }
   }
 
   render() {
+    var { image } = this.state
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input type="text" name="name" value={this.state.name} onChange={this.handleChange} />
-        </label>
-        <label>
-          Description:
-          <input type="text" name="description" value={this.state.description} onChange={this.handleChange} />
-        </label>
-        <label>
-          External URL:
-          <input type="text" name="externalURL" value={this.state.externalURL} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+      <div className="container">
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Name:
+            <input type="text" name="name" value={this.state.name} onChange={this.handleChange} />
+          </label>
+          <label>
+            Description:
+            <input type="text" name="description" value={this.state.description} onChange={this.handleChange} />
+          </label>
+          <label>
+            Image:
+            <input type="text" name="image" value={this.state.image} onChange={this.handleChange} />
+          </label>
+          <img src={ image } alt='logo' />
+          <input type="submit" value="Submit" />
+        </form>
+        <Link to="/">Back to dashboard</Link>
+      </div>
     );
   }
 }
 
 const mapStateToProps = ({ session }) => ({ session });
-const connectedComponent = connect(mapStateToProps, { createErc721 })(CreateERC721Form);
+const connectedComponent = connect(mapStateToProps, { createProduct })(CreateERC721Form);
 export default withRouter(connectedComponent);

@@ -1,42 +1,86 @@
 import React from 'react';
 import { Row, Col, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { fetchErc1155, FETCH_ERC1155_SUCCESS } from '../../../actions/erc1155/fetch';
+import { fetchErc721, FETCH_ERC721_SUCCESS } from '../../../actions/erc721/fetch';
 import { publishProduct, PUBLISH_PRODUCT_SUCCESS } from '../../../actions/opensea/publish'
+
+import '../../../style/app.scss';
 
 class HomeProduct extends React.Component {
 
 	constructor(props) {
 		super(props)
 		this.publishToMarketPlace = this.publishToMarketPlace.bind(this)
+
+		this.state = {
+			token: {}
+		}
+	}
+
+	async componentWillMount() {
+		const { product, fetchErc721, fetchErc1155 } = this.props;
+
+		var action = undefined;
+		const tokenId = product.token_id
+
+		if (product.token_type == 0) {
+			action = await fetchErc721({ tokenId })
+		} else {
+			action = await fetchErc1155({ tokenId })
+		}
+
+		if (action.type === FETCH_ERC721_SUCCESS) {
+			this.setState({
+				token: {
+					id: tokenId,
+					name: action.data[0],
+					description: action.data[1],
+					exturnal_url: action.data[2],
+					image: action.data[3]
+				}
+			})
+		} else if (action.type === FETCH_ERC1155_SUCCESS) {
+			this.setState({
+				token: {
+					id: tokenId,
+					name: action.data[0],
+					description: action.data[1],
+					exturnal_url: action.data[2],
+					image: action.data[3],
+					quantity: action.data[4]
+				}
+			})
+		}
 	}
 	
 	publishToMarketPlace(event) {
-		const { token, session,publishProduct } = this.props
-		var token_type = 0
-		if (token.quantity)
-			token_type = 1
+		const { product, session, publishProduct } = this.props
 		const payload = {
-			id: token.id,
+			id: product.id,
 			address: session.data.address,
-			type: token_type
+			type: product.token_type
 		}
 		publishProduct(payload)
 	}
 
 	render() {
-		const { token, session } = this.props
+		if (this.props.session.isLoading)
+			return <div>Loading...</div>
+		const { product, session } = this.props
+		const { token } = this.state
 		return(
-			<Row key={token.id} className="invoice-header">
+			<Row key={product.id} className="invoice-header">
 	          <Col>
-	          	{token.name}
+	          	<img src={ token.image } className="tbl-image" alt='logo' />
 	          </Col>
-	          <Col>{ token.description }</Col>
 	          <Col>
-	            <a target='_blank'>{ token.external_url }</a>
+	          	<Link to={ `/Product/${product.id}` }>{ token.name }</Link>
 	          </Col>
-	          { session.data.address ? (<Col>
-	          	<Button block color="primary" onClick={this.publishToMarketPlace}>
+	          { session.data.id && session.data.id == product.user_id ? (<Col>
+	          	<Button block color="primary" onClick={this.publishToMarketPlace} disabled={ product.status !== 'minted'}>
 			        Publish to Opensea
 			    </Button>
 	          </Col>) : null}
@@ -46,5 +90,5 @@ class HomeProduct extends React.Component {
 }
 
 const mapStateToProps = ({ session }) => ({ session });
-const connectedComponent = connect(mapStateToProps, { publishProduct })(HomeProduct);
+const connectedComponent = connect(mapStateToProps, { publishProduct, fetchErc721, fetchErc1155 })(HomeProduct);
 export default withRouter(connectedComponent);

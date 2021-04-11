@@ -4,7 +4,8 @@ module.exports = app => {
   var router = require("express").Router();
 
   // Create a new Client
-  router.get("/:userId", productController.list);
+  router.post("/", productController.create);
+  router.get("/", productController.list);
   router.delete("/", productController.removeAll);
   router.get("/:product_id", productController.get);
   router.post("/update:product_id", productController.update);

@@ -12,6 +12,7 @@ import { Web3ReactProvider } from '@web3-react/core'
 import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import { metamaskVerify } from './actions/metamask/verify'
+import { fetchProduct } from './actions/product/fetch'
 
 import './style/app.scss';
 
@@ -22,6 +23,8 @@ class App extends React.Component {
     if (data.id) {
       this.props.metamaskVerify(data)
     }
+
+    this.props.fetchProduct();
   }
 
   getLibrary = (provider) => {
@@ -31,7 +34,7 @@ class App extends React.Component {
   }
 
   render() {
-      const isLoggedIn = this.props.session.data && this.props.session.data.token;
+      const isLoggedIn = this.props.session.data && this.props.session.data.id;
       return (
         <div className="app">
           <Web3ReactProvider getLibrary={this.getLibrary}>
@@ -43,5 +46,5 @@ class App extends React.Component {
 }
 
 const mapStateToProps = ({ session }) => ({ session });
-const connectedComponent = connect(mapStateToProps, { metamaskVerify })(App);
+const connectedComponent = connect(mapStateToProps, { metamaskVerify, fetchProduct })(App);
 export default withRouter(connectedComponent);

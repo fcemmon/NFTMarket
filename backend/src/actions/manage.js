@@ -57,4 +57,6 @@ exports.balance = async (address, token_id) => {
 	})
 
 	const ownkKitty = balance.greaterThan(0)
+
+  return ownkKitty
 } 

@@ -16,5 +16,4 @@ CONTRACT_URI_METADATA_AVAILABLE = CONTRACT_URI_METADATA.keys()
 
 exports.get = (req, res) => {
     const contractName = req.params.contract_name
-
 }

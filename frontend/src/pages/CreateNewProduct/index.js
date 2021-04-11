@@ -11,8 +11,9 @@ class CreateNewProduct extends React.Component {
 			<div className="page">
 				<div className="container">
 					<div className="button-container">
-						<Link to="/product/new/single">Create ERC-721</Link>
-						<Link to="/product/new/multi">Create ERC-1155</Link>
+						<Link to="/new/product/single">Create ERC-721</Link>
+						<Link to="/new/product/multi">Create ERC-1155</Link>
+						<Link to="/">Back to dashboard</Link>
 					</div>
 				</div>
 			</div>

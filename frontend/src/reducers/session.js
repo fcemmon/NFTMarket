@@ -1,10 +1,14 @@
-import { METAMASK_FETCH_START } from '../actions/metamask/fetch'
-import { METAMASK_LOGIN_START, METAMASK_LOGIN_SUCCESS } from '../actions/metamask/signin'
-import { METAMASK_SIGNUP_START, METAMASK_SIGNUP_SUCCESS } from '../actions/metamask/signup'
-import { METAMASK_GET_START, METAMASK_GET_SUCCESS } from '../actions/metamask/get'
-import { PUBLISH_PRODUCT_START, PUBLISH_PRODUCT_SUCCESS } from '../actions/opensea/publish'
-import { VIEW_PRODUCT_START, VIEW_PRODUCT_SUCCESS } from '../actions/opensea/view'
-import { METAMASK_VERIFY_START, METAMASK_VERIFY_SUCCESS } from '../actions/metamask/verify'
+import { METAMASK_FETCH_START, METAMASK_FETCH_SUCCESS, METAMASK_FETCH_FAILURE } from '../actions/metamask/fetch'
+import { METAMASK_LOGIN_START, METAMASK_LOGIN_SUCCESS, METAMASK_LOGIN_FAILURE } from '../actions/metamask/signin'
+import { METAMASK_SIGNUP_START, METAMASK_SIGNUP_SUCCESS, METAMASK_SIGNUP_FAILURE } from '../actions/metamask/signup'
+import { METAMASK_GET_START, METAMASK_GET_SUCCESS, METAMASK_GET_FAILURE } from '../actions/metamask/get'
+import { PUBLISH_PRODUCT_START, PUBLISH_PRODUCT_SUCCESS, PUBLISH_PRODUCT_FAILURE } from '../actions/opensea/publish'
+import { VIEW_PRODUCT_START, VIEW_PRODUCT_SUCCESS, VIEW_PRODUCT_FAILURE } from '../actions/opensea/view'
+import { METAMASK_VERIFY_START, METAMASK_VERIFY_SUCCESS, METAMASK_VERIFY_FAILURE } from '../actions/metamask/verify'
+import { FETCH_ERC721_START, FETCH_ERC721_SUCCESS, FETCH_ERC721_FAILURE } from '../actions/erc721/fetch'
+import { FETCH_ERC1155_START, FETCH_ERC1155_SUCCESS, FETCH_ERC1155_FAILURE } from '../actions/erc1155/fetch'
+import { CREATE_PRODUCT_START, CREATE_PRODUCT_SUCCESS, CREATE_PRODUCT_FAILURE } from '../actions/product/create'
+import { GET_PRODUCT_START, GET_PRODUCT_SUCCESS, GET_PRODUCT_FAILURE } from '../actions/product/get'
 
 const initialState = {
   isLoading: false,
@@ -22,6 +26,10 @@ export default (state = initialState, action) => {
 		case METAMASK_LOGIN_START:
 		case METAMASK_FETCH_START:
 		case METAMASK_GET_START:
+    case FETCH_ERC1155_START:
+    case FETCH_ERC721_START:
+    case GET_PRODUCT_START:
+    case CREATE_PRODUCT_START:
       	return { ...state, isLoading: true };
     case METAMASK_LOGIN_SUCCESS:
     case METAMASK_VERIFY_SUCCESS:
@@ -29,6 +37,21 @@ export default (state = initialState, action) => {
   	case PUBLISH_PRODUCT_SUCCESS:
   	case VIEW_PRODUCT_SUCCESS:
   	case METAMASK_GET_SUCCESS:
+    case FETCH_ERC1155_SUCCESS:
+    case FETCH_ERC721_SUCCESS:
+    case GET_PRODUCT_SUCCESS:
+    case CREATE_PRODUCT_SUCCESS:
+    case METAMASK_FETCH_FAILURE:
+    case METAMASK_LOGIN_FAILURE:
+    case METAMASK_SIGNUP_FAILURE:
+    case METAMASK_GET_FAILURE:
+    case PUBLISH_PRODUCT_FAILURE:
+    case VIEW_PRODUCT_FAILURE:
+    case METAMASK_VERIFY_FAILURE:
+    case FETCH_ERC721_FAILURE:
+    case FETCH_ERC1155_FAILURE:
+    case CREATE_PRODUCT_FAILURE:
+    case GET_PRODUCT_FAILURE:
   		return { ...state, isLoading: false, error: null}
   	default:
     		return state;

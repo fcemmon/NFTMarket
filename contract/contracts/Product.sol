@@ -9,6 +9,15 @@ import "./ERC721Tradable.sol";
  * Creature - a contract for my non-fungible creatures.
  */
 contract Product is ERC721Tradable {
+
+    struct ProductInfo {
+        string name;
+        string description;
+        string exturnal_url;
+        string image;
+    }
+    
+    mapping (uint256 => ProductInfo) products;
 	
 	event MintToken(uint256 token_id, uint256 product_id);
     
@@ -24,8 +33,23 @@ contract Product is ERC721Tradable {
         return "https://creatures-api.opensea.io/contract/opensea-creatures";
     }
 
-    function mintTo(address _to, uint256 token_id, uint256 product_id) public onlyOwner {
+    function mintTo(
+        address _to, 
+        uint256 token_id, 
+        uint256 product_id, 
+        string memory name, 
+        string memory description, 
+        string memory image,
+        string memory exturnal_url
+    ) public onlyOwner {
     	mintTo(_to, token_id);
+        products[token_id] = ProductInfo({name:name, description:description, image:image, exturnal_url:exturnal_url});
     	emit MintToken(token_id, product_id);
     }
+
+    function getInfo(uint256 token_id) public view returns (string memory, string memory, string memory, string memory)  {
+        ProductInfo memory product = products[token_id];
+        return (product.name, product.description, product.exturnal_url, product.image);
+    }
+    
 }

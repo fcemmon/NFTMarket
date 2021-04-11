@@ -1,5 +1,4 @@
-import { FETCH_ERC721_START, FETCH_ERC721_SUCCESS } from '../actions/erc721/fetch'
-import { FETCH_ERC1155_START, FETCH_ERC1155_SUCCESS } from '../actions/erc1155/fetch'
+import { FETCH_PRODUCT_START, FETCH_PRODUCT_SUCCESS, FETCH_PRODUCT_FAILURE } from '../actions/product/fetch'
 
 const initialState = {
   isLoading: false,
@@ -9,12 +8,12 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
-    case FETCH_ERC721_START:
-    case FETCH_ERC1155_START:
+    case FETCH_PRODUCT_START:
 		  	return { ...state, isLoading: true, data:[] };
-    case FETCH_ERC721_SUCCESS:
-    case FETCH_ERC1155_SUCCESS:
-    	  return { ...state, isLoading: false, error: null, data: [ ...state.data, ...action.data ]}
+    case FETCH_PRODUCT_SUCCESS:
+    	  return { ...state, isLoading: false, error: null, data: action.data }
+    case FETCH_PRODUCT_FAILURE:
+        return { ...state, isLoading: true };
     default:
       	return state;
 	}

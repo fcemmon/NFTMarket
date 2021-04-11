@@ -1,4 +1,5 @@
 const opensea = require("opensea-js");
+const { WyvernSchemaName } = require("opensea-js/lib/types")
 const OpenSeaPort = opensea.OpenSeaPort;
 
 const ERC721 = require("../db/erc721.db")
@@ -9,6 +10,8 @@ const MnemonicWalletSubprovider = require("@0x/subproviders")
   .MnemonicWalletSubprovider;
 const RPCSubprovider = require("web3-provider-engine/subproviders/rpc");
 const Web3ProviderEngine = require("web3-provider-engine");
+
+const Product = require("../db/product.db")
 
 const MNEMONIC = process.env.MNEMONIC;
 const NODE_API_KEY = process.env.INFURA_KEY || process.env.ALCHEMY_KEY;
@@ -49,19 +52,38 @@ const seaport = new OpenSeaPort(
   (arg) => console.log(arg)
 );
 
-exports.sell = async (token_id, address, token_type) => {
+exports.sell = async (product_id, token_id, address, token_type) => {
   // Example: simple fixed-price sale of an item owned by a user.
   console.log("Auctioning an item for a fixed price...");
+  console.log(product_id)
+  console.log(token_id)
+  console.log(address)
+  console.log(token_type)
   let token_address = token_type == 0 ? NFT_721_CONTRACT_ADDRESS : NFT_1155_CONTRACT_ADDRESS
-  const fixedPriceSellOrder = await seaport.createSellOrder({
-    asset: {
+  var asset = undefined
+  if (token_type == 0) {
+    asset = {
+      tokenId: token_id,
+      tokenAddress: token_address
+    }
+  } else {
+    asset = {
       tokenId: token_id,
       tokenAddress: token_address,
-    },
+      schemaName: WyvernSchemaName.ERC1155
+    }
+  }
+
+  const fixedPriceSellOrder = await seaport.createSellOrder({
+    asset,
     startAmount: 0.05,
     expirationTime: 0,
     accountAddress: address,
   });
+
+  Product.updateStatus(product_id, "deployed", (err, res, fields) => {
+    console.log(err)
+  })
   console.log(
     `Successfully created a fixed-price sell order! ${fixedPriceSellOrder.asset.openseaLink}\n`
   );

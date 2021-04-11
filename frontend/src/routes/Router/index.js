@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import AuthRequiredRoute from '../../auth/AuthRequired';
 
 import Home from '../../pages/Home';
+import ProductDetail from '../../pages/ProductDetail'
 import WalletLogin from '../../pages/WalletLogin';
 import CreateNewProduct from '../../pages/CreateNewProduct';
 import CreateSingle from '../../pages/CreateSingle';
@@ -19,23 +20,24 @@ class Router extends React.Component {
         <AuthRequiredRoute
           isAuthenticated={this.props.isAuthenticated}
           exact
-          path="/product/new/single"
+          path="/new/product/single"
           component={CreateSingle}
         />
 
         <AuthRequiredRoute
           isAuthenticated={this.props.isAuthenticated}
           exact
-          path="/product/new/multi"
+          path="/new/product/multi"
           component={CreateMulti}
         />
 
         <AuthRequiredRoute
           isAuthenticated={this.props.isAuthenticated}
           exact
-          path="/product/new/"
+          path="/new/product"
           component={CreateNewProduct}
         />
+        <Route exact path="/product/:productId" component={ProductDetail} />
         <Route path="/auth/wallet-begin" component={WalletLogin} />
         <Route component={Notfound} />
       </Switch>

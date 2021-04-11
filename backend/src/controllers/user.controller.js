@@ -72,6 +72,7 @@ exports.verify = (req, res) => {
 
   User.verify({ id, name, address, nonce }, (err, result, fields) => {
     if (err) throw err
+    console.log(result)
     if (result.length > 0)
       res.send(JSON.stringify(result[0]))
     else 

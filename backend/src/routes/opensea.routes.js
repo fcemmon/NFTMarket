@@ -4,8 +4,8 @@ module.exports = app => {
   var router = require("express").Router();
 
   // Create a new Client
-  router.get("/:token_id", openseaController.view);
-  router.post("/:token_id", openseaController.publish);
+  router.get("/:product_id", openseaController.view);
+  router.post("/:product_id", openseaController.publish);
 
   app.use("/api/opensea", router);
 };
